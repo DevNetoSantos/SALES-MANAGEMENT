@@ -63,7 +63,7 @@ export class EmployeeService {
     })
 
     if(!employeeExist) {
-      throw new Error("this email already exists");
+      throw new Error("this employee not found");
     }
 
     return {
@@ -101,7 +101,21 @@ export class EmployeeService {
     return {messege: 'Employee successfully updated'}
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} employee`;
+  async remove(id: number) {
+    const employee = await this.prisma.employee.findUnique({where: {id}});
+
+    const employeeExist = await this.prisma.employee.findFirst({
+      where: {
+        id: id
+      }
+    })
+
+    if(!employeeExist) {
+      throw new Error("this employee not found");
+    }
+
+    await this.prisma.employee.delete({where: {id}});
+
+    return {messege: 'Employee delete successfully'}
   }
 }

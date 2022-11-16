@@ -18,17 +18,17 @@ export class EmployeeController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: string) {
+  findOne(@Param('id', ParseIntPipe) id: number) {
     return this.employeeService.findOne(+id);
   }
 
   @Patch(':id')
-  update(@Param('id', ParseIntPipe) id: string, @Body() updateEmployeeDto: UpdateEmployeeDto) {
+  update(@Param('id', ParseIntPipe) id: number, @Body() updateEmployeeDto: UpdateEmployeeDto) {
     return this.employeeService.update(+id, updateEmployeeDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id', ParseIntPipe) id: number) {
     return this.employeeService.remove(+id);
   }
 }
