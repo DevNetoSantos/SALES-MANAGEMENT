@@ -72,8 +72,33 @@ export class EmployeeService {
     }
   }
 
-  update(id: number, updateEmployeeDto: UpdateEmployeeDto) {
-    return `This action updates a #${id} employee`;
+  async update(id: number, updateEmployeeDto: UpdateEmployeeDto) {
+    const data = {
+      ...updateEmployeeDto,
+      password: await bcrypt.hash(updateEmployeeDto.password, 10)
+    }
+
+/*     const employeeExist = await this.prisma.employee.findFirst({
+      where: {
+        email: data.email
+      }
+    })
+
+    if(employeeExist) {
+      throw new Error("this email already exists");
+    } */
+
+    await this.prisma.employee.update({
+      where: {id},
+      data: {
+        name: data.name,
+        lastname: data.lastname,
+        email: data?.email,
+        password: data.password
+      }
+    });
+
+    return {messege: 'Employee successfully updated'}
   }
 
   remove(id: number) {
