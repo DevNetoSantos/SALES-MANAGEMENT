@@ -53,8 +53,23 @@ export class EmployeeService {
     return employees;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} employee`;
+  async findOne(id: number) {
+    const employee = await this.prisma.employee.findUnique({where: {id}});
+
+    const employeeExist = await this.prisma.employee.findFirst({
+      where: {
+        id: id
+      }
+    })
+
+    if(!employeeExist) {
+      throw new Error("this email already exists");
+    }
+
+    return {
+      ...employee,
+      password: undefined
+    }
   }
 
   update(id: number, updateEmployeeDto: UpdateEmployeeDto) {
