@@ -7,12 +7,45 @@ import { UpdateClientDto } from './dto/update-client.dto';
 export class ClientService {
   constructor(private prisma: PrismaService) {}
   
-  create(createClientDto: CreateClientDto) {
-    return 'This action adds a new client';
+  async create(createClientDto: CreateClientDto) {
+    const data = {
+      ...createClientDto
+    }
+
+    const clientExist = await this.prisma.client.findFirst({
+      where: {
+        cpf: data.cpf
+      }
+    })
+
+    if(clientExist) {
+      throw new Error("this client already exists");
+    }
+
+    await this.prisma.client.create({
+      data: {
+        name: data.name,
+        cpf: data.cpf,
+        employeeId: data.employeeId
+      },
+    });
+
+    return {messege: 'client reguster successfully'}
   }
 
-  findAll() {
-    return `This action returns all client`;
+  async findAll() {
+    const client = await this.prisma.client.findMany({
+      include: {
+        employee: {
+          select: {
+            name: true,
+            email: true
+          }
+        }
+      }
+    });
+    
+    return client;
   }
 
   findOne(id: number) {
