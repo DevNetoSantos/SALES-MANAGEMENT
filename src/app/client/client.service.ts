@@ -45,7 +45,7 @@ export class ClientService {
     })
 
     if(!clientExist) {
-      throw new Error("this client already exists");
+      throw new Error("this client does not exist");
     }
 
     return client;
@@ -59,16 +59,23 @@ export class ClientService {
     };
 
     if(!client) {
-      throw new Error("this client already exists");
+      throw new Error("this client does not exist");
     };
 
     await this.prisma.client.update({where: {id}, data: {name: data.name, cpf: data.cpf}});
 
     return {messege: 'client update successfully'};
-    
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} client`;
+  async remove(id: number) {
+    const client = await this.prisma.client.findUnique({where: {id}});
+
+    if(!client) {
+      throw new Error("this client does not exist");
+    }
+
+    await this.prisma.client.delete({where: {id}});
+
+    return {messege: 'client delete successfully'}
   }
 }
