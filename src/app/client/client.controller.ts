@@ -23,7 +23,7 @@ export class ClientController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: number, @Body() updateClientDto: UpdateClientDto) {
+  update(@Param('id', ParseIntPipe) id: number, @Body() updateClientDto: UpdateClientDto) {
     return this.clientService.update(+id, updateClientDto);
   }
 

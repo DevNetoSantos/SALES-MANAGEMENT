@@ -13,9 +13,7 @@ export class ClientService {
     }
 
     const clientExist = await this.prisma.client.findFirst({
-      where: {
-        cpf: data.cpf
-      }
+      where: { cpf: data.cpf }
     })
 
     if(clientExist) {
@@ -23,10 +21,7 @@ export class ClientService {
     }
 
     await this.prisma.client.create({
-      data: {
-        name: data.name,
-        cpf: data.cpf
-      }
+      data: { name: data.name, cpf: data.cpf }
     });
 
     return {messege: 'client reguster successfully'}
@@ -34,9 +29,7 @@ export class ClientService {
 
   async findAll() {
     const client = await this.prisma.client.findMany({
-      include: {
-        sales: true
-      }
+      include: { sales: true }
     });
     
     return client;
@@ -48,9 +41,7 @@ export class ClientService {
     })
 
     const clientExist = await this.prisma.client.findFirst({
-      where: {
-        id: id
-      }
+      where: { id: id }
     })
 
     if(!clientExist) {
@@ -60,8 +51,21 @@ export class ClientService {
     return client;
   }
 
-  update(id: number, updateClientDto: UpdateClientDto) {
-    return `This action updates a #${id} client`;
+  async update(id: number, updateClientDto: UpdateClientDto) {
+    const client = await this.prisma.client.findUnique({ where: { id } });
+
+    const data = {
+      ...updateClientDto
+    };
+
+    if(!client) {
+      throw new Error("this client already exists");
+    };
+
+    await this.prisma.client.update({where: {id}, data: {name: data.name, cpf: data.cpf}});
+
+    return {messege: 'client update successfully'};
+    
   }
 
   remove(id: number) {
