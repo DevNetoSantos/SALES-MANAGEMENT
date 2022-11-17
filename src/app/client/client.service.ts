@@ -42,8 +42,22 @@ export class ClientService {
     return client;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} client`;
+  async findOne(id: number) {
+    const client = await this.prisma.client.findUnique({
+      where: { id }, include: { sales: true }
+    })
+
+    const clientExist = await this.prisma.client.findFirst({
+      where: {
+        id: id
+      }
+    })
+
+    if(!clientExist) {
+      throw new Error("this client already exists");
+    }
+
+    return client;
   }
 
   update(id: number, updateClientDto: UpdateClientDto) {
