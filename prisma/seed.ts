@@ -12,13 +12,12 @@ const main = async () => {
     }
   }); */
 
-  const client = await prisma.client.create({
+/*   const client = await prisma.client.create({
     data: {
       name: 'João',
       cpf: '45896235147',
-      employeeId: 1
     }
-  });  
+  });   */
 }
 
 main()

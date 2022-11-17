@@ -25,9 +25,8 @@ export class ClientService {
     await this.prisma.client.create({
       data: {
         name: data.name,
-        cpf: data.cpf,
-        employeeId: data.employeeId
-      },
+        cpf: data.cpf
+      }
     });
 
     return {messege: 'client reguster successfully'}
@@ -36,12 +35,7 @@ export class ClientService {
   async findAll() {
     const client = await this.prisma.client.findMany({
       include: {
-        employee: {
-          select: {
-            name: true,
-            email: true
-          }
-        }
+        sales: true
       }
     });
     
