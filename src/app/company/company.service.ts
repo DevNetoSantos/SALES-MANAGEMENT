@@ -6,13 +6,35 @@ import { UpdateCompanyDto } from './dto/update-company.dto';
 @Injectable()
 export class CompanyService {
   constructor(private prisma: PrismaService) {}
-  
-  create(createCompanyDto: CreateCompanyDto) {
-    return 'This action adds a new company';
+
+  async create(createCompanyDto: CreateCompanyDto) {
+        const data = {
+      ...createCompanyDto
+    };
+
+    const companyExist = await this.prisma.company.findFirst({
+      where: { cnpj: data.cnpj }
+    });
+
+    if(companyExist) {
+      throw new Error("this company already exists");
+    };
+
+    await this.prisma.company.create({
+      data: { name: data.name, cnpj: data.cnpj }
+    });
+
+    return {messege: 'company register successfully'}
   }
 
-  findAll() {
-    return `This action returns all company`;
+  async findAll() {
+    const company = await this.prisma.company.findMany({
+      include: {
+        products: true
+      }
+    });
+    
+    return company;
   }
 
   findOne(id: number) {
