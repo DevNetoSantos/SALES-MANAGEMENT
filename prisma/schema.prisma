@@ -60,9 +60,7 @@ model Product {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
   name          String
-  cod_refence   String
   trader_comme  String
-  factory       String
   qts_item      String
   value_sale    String
   data_validity String

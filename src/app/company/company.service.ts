@@ -8,9 +8,7 @@ export class CompanyService {
   constructor(private prisma: PrismaService) {}
 
   async create(createCompanyDto: CreateCompanyDto) {
-        const data = {
-      ...createCompanyDto
-    };
+    const data = createCompanyDto;
 
     const companyExist = await this.prisma.company.findFirst({
       where: { cnpj: data.cnpj }
@@ -20,9 +18,7 @@ export class CompanyService {
       throw new Error("this company already exists");
     };
 
-    await this.prisma.company.create({
-      data: { name: data.name, cnpj: data.cnpj }
-    });
+    await this.prisma.company.create({ data });
 
     return {messege: 'company register successfully'}
   }
