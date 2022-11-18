@@ -28,7 +28,7 @@ export class CompanyController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id', ParseIntPipe) id: string) {
     return this.companyService.remove(+id);
   }
 }

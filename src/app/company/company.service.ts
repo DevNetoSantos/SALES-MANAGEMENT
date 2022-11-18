@@ -63,7 +63,15 @@ export class CompanyService {
     return {messege: 'company update successfully'};
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} company`;
+  async remove(id: number) {
+    const company = await this.prisma.company.findUnique({where: {id}});
+    
+    if(!company) {
+      throw new Error ('this company not found')
+    }
+
+    await this.prisma.company.delete({where: {id}});
+
+    return {messege: 'company delete successfully'}
   }
 }
