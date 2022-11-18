@@ -47,8 +47,20 @@ export class CompanyService {
     return company;
   }
 
-  update(id: number, updateCompanyDto: UpdateCompanyDto) {
-    return `This action updates a #${id} company`;
+  async update(id: number, updateCompanyDto: UpdateCompanyDto) {
+    const company = await this.prisma.company.findUnique({ where: {id} });
+    
+    if(!company) {
+      throw new Error ('this company not found')
+    }
+
+    const data = {
+      ...updateCompanyDto
+    }
+
+    await this.prisma.company.update({where: {id}, data: {name: data.name, cnpj: data.cnpj}});
+
+    return {messege: 'company update successfully'};
   }
 
   remove(id: number) {
