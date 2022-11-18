@@ -37,8 +37,14 @@ export class CompanyService {
     return company;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} company`;
+  async findOne(id: number) {
+    const company = await this.prisma.company.findUnique({where: {id}, include: {products: true} });
+
+    if(!company) {
+      throw new Error ('This company not found')
+    }
+
+    return company;
   }
 
   update(id: number, updateCompanyDto: UpdateCompanyDto) {
