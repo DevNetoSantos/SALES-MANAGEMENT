@@ -21,7 +21,7 @@ const main = async () => {
     }
   }); */
 
-  const product = await prisma.product.create({
+/*   const product = await prisma.product.create({
     data: {
       name: 'Banana',
       trader_comme: 'Netim Santos',
@@ -31,6 +31,15 @@ const main = async () => {
       data_fabrication: '10/02/2022',
       due_date: '10/02/2022',
       companyId: 1
+    }
+  }); */
+
+  const sale = await prisma.sale.create({
+    data: {
+      qts_product: '23',
+      clientId: 1,
+      productId: 1,
+      employeeId: 1
     }
   });
 }
