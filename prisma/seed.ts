@@ -19,9 +19,9 @@ const main = async () => {
       name: 'João',
       cpf: '45896235147',
     }
-  });   */
+  }); */
 
-/*   const product = await prisma.product.create({
+  const product = await prisma.product.create({
     data: {
       name: 'Banana',
       trader_comme: 'Netim Santos',
@@ -30,9 +30,9 @@ const main = async () => {
       cod_reference: hasCode,
       data_fabrication: '10/02/2022',
       due_date: '10/02/2022',
-      companyId: 2
+      companyId: 1
     }
-  }); */
+  });
 }
 
 main()

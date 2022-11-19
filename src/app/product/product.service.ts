@@ -41,12 +41,37 @@ export class ProductService {
     return products;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
+  async findOne(id: number) {
+    const product = await this.prisma.product.findUnique({where: {id}, include: {company: true}});
+    
+    if(!product) {
+      throw new Error ('this product not found')
+    }
+
+    return product;
   }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
+  async update(id: number, updateProductDto: UpdateProductDto) {
+    const product = await this.prisma.product.findUnique({where: {id}});
+
+    if(!product) {
+      throw new Error ('this product not found')
+    }
+
+    const data = updateProductDto;
+
+    await this.prisma.product.update({
+      where: {id},
+      data: {
+        name: data.name,
+        trader_comme: data.trader_comme,
+        qts_item: data.qnts_item,
+        value_sale: data.value_sale,
+        data_fabrication: data.data_fabrication,
+        due_date: data.due_date,
+        companyId: data.companyId
+      }
+    });
   }
 
   remove(id: number) {
