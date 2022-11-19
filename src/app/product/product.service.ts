@@ -74,7 +74,15 @@ export class ProductService {
     });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} product`;
+  async remove(id: number) {
+    const product = await this.prisma.product.findUnique({where: {id}});
+
+    if(!product) {
+      throw new Error ('this product not found')
+    }
+
+    await this.prisma.product.delete({where: {id}});
+
+    return {messege: 'product delete successfully'};
   }
 }
