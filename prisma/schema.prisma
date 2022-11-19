@@ -56,15 +56,16 @@ model Sale {
 }
 
 model Product {
-  id            Int      @id @default(autoincrement())
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  name          String
-  trader_comme  String
-  qts_item      String
-  value_sale    String
-  data_validity String
-  due_date      String
+  id               Int      @id @default(autoincrement())
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  name             String
+  trader_comme     String
+  cod_reference    String?
+  qts_item         String
+  value_sale       String
+  data_fabrication String?
+  due_date         String?
 
   sales Sale[]
 

@@ -1,7 +1,9 @@
 import { PrismaClient } from '@prisma/client'
+import { nanoid } from 'nanoid';
 const prisma = new PrismaClient()
 
 const main = async () => {
+  const hasCode = nanoid();
 
 /*   const employee = await prisma.employee.create({
     data: {
@@ -19,17 +21,18 @@ const main = async () => {
     }
   });   */
 
-  const product = await prisma.product.create({
+/*   const product = await prisma.product.create({
     data: {
-      name: 'Sal',
-      trader_comme: 'Bruno Levi',
-      qts_item: '45',
-      value_sale: '2,49',
-      data_validity: '10/02/2022',
-      due_date: '10/02/2030',
+      name: 'Banana',
+      trader_comme: 'Netim Santos',
+      qts_item: '200',
+      value_sale: '5,00',
+      cod_reference: hasCode,
+      data_fabrication: '10/02/2022',
+      due_date: '10/02/2022',
       companyId: 2
     }
-  });
+  }); */
 }
 
 main()

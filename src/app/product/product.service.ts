@@ -9,13 +9,24 @@ export class ProductService {
   constructor(private prisma: PrismaService) {}
 
   async create(createProductDto: CreateProductDto) {
-    let data: any = createProductDto
+    const data = createProductDto;
+    const hasCode = nanoid();
 
-    let newData: [] = [];
-
-    
-
-    await this.prisma.product.create({ data });
+    await this.prisma.product.create({
+      data: {
+        name: data.name,
+        cod_reference: hasCode,
+        trader_comme: data.trader_comme,
+        qts_item: data.qnts_item,
+        value_sale: data.value_sale,
+        data_fabrication: data.data_fabrication,
+        due_date: data.due_date,
+        companyId: data.companyId
+      },
+      include: {
+        company: true
+      }
+    });
 
     return {messege: 'product create successfully'};
   }

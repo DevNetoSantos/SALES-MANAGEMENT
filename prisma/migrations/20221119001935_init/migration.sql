@@ -20,7 +20,6 @@ CREATE TABLE `clients` (
     `updatedAt` DATETIME(3) NOT NULL,
     `name` VARCHAR(191) NOT NULL,
     `cpf` VARCHAR(191) NOT NULL,
-    `employeeId` INTEGER NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -32,6 +31,7 @@ CREATE TABLE `sales` (
     `updatedAt` DATETIME(3) NOT NULL,
     `qts_product` VARCHAR(191) NOT NULL,
     `clientId` INTEGER NOT NULL,
+    `employeeId` INTEGER NOT NULL,
     `productId` INTEGER NOT NULL,
 
     PRIMARY KEY (`id`)
@@ -43,13 +43,12 @@ CREATE TABLE `products` (
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
     `name` VARCHAR(191) NOT NULL,
-    `cod_refence` VARCHAR(191) NOT NULL,
     `trader_comme` VARCHAR(191) NOT NULL,
-    `factory` VARCHAR(191) NOT NULL,
+    `cod_reference` VARCHAR(191) NULL,
     `qts_item` VARCHAR(191) NOT NULL,
     `value_sale` VARCHAR(191) NOT NULL,
-    `data_validity` VARCHAR(191) NOT NULL,
-    `due_date` VARCHAR(191) NOT NULL,
+    `data_fabrication` VARCHAR(191) NULL,
+    `due_date` VARCHAR(191) NULL,
     `companyId` INTEGER NOT NULL,
 
     PRIMARY KEY (`id`)
@@ -67,10 +66,10 @@ CREATE TABLE `companys` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- AddForeignKey
-ALTER TABLE `clients` ADD CONSTRAINT `clients_employeeId_fkey` FOREIGN KEY (`employeeId`) REFERENCES `employees`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `sales` ADD CONSTRAINT `sales_clientId_fkey` FOREIGN KEY (`clientId`) REFERENCES `clients`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `sales` ADD CONSTRAINT `sales_clientId_fkey` FOREIGN KEY (`clientId`) REFERENCES `clients`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `sales` ADD CONSTRAINT `sales_employeeId_fkey` FOREIGN KEY (`employeeId`) REFERENCES `employees`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `sales` ADD CONSTRAINT `sales_productId_fkey` FOREIGN KEY (`productId`) REFERENCES `products`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
