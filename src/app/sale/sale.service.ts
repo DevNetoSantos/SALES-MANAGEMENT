@@ -14,6 +14,7 @@ export class SaleService {
       data: {
         qts_product: data.qts_product,
         clientId: data.clientId,
+        pay_value: data.pay_value,
         employeeId: data.employeeId,
         productId: data.productId
       },
@@ -57,8 +58,38 @@ export class SaleService {
     return sales;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} sale`;
+  async findOne(id: number) {
+    const sale = await this.prisma.sale.findUnique({where: {id},
+      include: {
+        product: {
+          select: {
+            name: true,
+            cod_reference: true,
+            value_sale: true,
+            data_fabrication: true,
+            due_date: true
+          }
+        },
+        employee: {
+          select: {
+            name: true,
+            lastname: true,
+          }
+        },
+        client: {
+          select: {
+            name: true,
+            cpf: true
+          }
+        }
+      }
+    });
+
+    if(!sale) {
+      throw new Error ('this sale not found')
+    }
+
+    return sale;
   }
 
   update(id: number, updateSaleDto: UpdateSaleDto) {
