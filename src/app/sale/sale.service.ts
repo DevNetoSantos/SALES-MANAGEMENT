@@ -94,9 +94,18 @@ export class SaleService {
 
   update(id: number, updateSaleDto: UpdateSaleDto) {
     return `This action updates a #${id} sale`;
+    //not edition comprovante compras
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} sale`;
+  async remove(id: number) {
+    const sale = await this.prisma.sale.findUnique({where: {id}});
+
+    if(!sale) {
+      throw new Error ('this sale not found');
+    }
+
+    await this.prisma.sale.delete({where: {id}});
+
+    return {messege: 'sale delete successfully'}
   }
 }

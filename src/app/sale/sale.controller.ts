@@ -22,13 +22,13 @@ export class SaleController {
     return this.saleService.findOne(+id);
   }
 
-  @Patch(':id')
+/*   @Patch(':id')
   update(@Param('id') id: string, @Body() updateSaleDto: UpdateSaleDto) {
     return this.saleService.update(+id, updateSaleDto);
-  }
+  } */
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id', ParseIntPipe) id: string) {
     return this.saleService.remove(+id);
   }
 }
