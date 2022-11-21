@@ -72,6 +72,10 @@ export class EmployeeService {
     }
   }
 
+  async findByEmail(email: string) {
+    return await this.prisma.employee.findFirst({where: {email}});
+  }
+
   async update(id: number, updateEmployeeDto: UpdateEmployeeDto) {
     const data = {
       ...updateEmployeeDto,
