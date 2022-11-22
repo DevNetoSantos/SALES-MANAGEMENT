@@ -1,6 +1,7 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, UseGuards } from '@nestjs/common';
 import { SaleService } from './sale.service';
 import { CreateSaleDto } from './dto/create-sale.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @Controller('sale')
 export class SaleController {
@@ -10,7 +11,7 @@ export class SaleController {
   create(@Body() createSaleDto: CreateSaleDto) {
     return this.saleService.create(createSaleDto);
   }
-
+  
   @Get()
   findAll() {
     return this.saleService.findAll();
