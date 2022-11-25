@@ -8,6 +8,7 @@
 - Mysql
 - Typescript
 - Prisma
+- Docker
 
 # Database modeling
 
