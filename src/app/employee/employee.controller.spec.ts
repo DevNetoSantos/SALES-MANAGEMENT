@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
+import { UpdateEmployeeDto } from './dto/update-employee.dto';
 import { EmployeeController } from './employee.controller';
 import { EmployeeService } from './employee.service';
 
@@ -15,6 +16,8 @@ const newEmployeeEntity = new CreateEmployeeDto({
   password: 'new password'
 })
 
+const updateEmployeeEntity = new UpdateEmployeeDto({ id: '1', name: 'neto', lastname: 'santos', email: 'neto@gmail.com', password: '12345' })
+
 describe('EmployeeController', () => {
   let employeeController: EmployeeController;
   let employeeService: EmployeeService;
@@ -29,8 +32,8 @@ describe('EmployeeController', () => {
             create: jest.fn().mockResolvedValue(newEmployeeEntity),
             findAll: jest.fn().mockResolvedValue(employeeEntityList),
             findOne: jest.fn().mockResolvedValue(employeeEntityList[0]),
-            update: jest.fn(),
-            remove: jest.fn(),
+            update: jest.fn().mockResolvedValue(updateEmployeeEntity),
+            remove: jest.fn().mockResolvedValue(undefined),
           }
         }
       ],
@@ -108,6 +111,45 @@ describe('EmployeeController', () => {
       jest.spyOn(employeeService, 'findOne').mockRejectedValueOnce(new Error());
 
       expect(employeeController.findOne(1)).rejects.toThrowError();
+    });
+  });
+
+  describe('update', () => {
+    it('should update a item employee successfully', async () => {
+      const body: UpdateEmployeeDto = {
+        id: '1', name: 'neto', lastname: 'santos', email: 'neto@gmail.com', password: '12345'
+      } 
+      const result = await employeeController.update(1, body );
+
+      expect(result).toEqual(updateEmployeeEntity);
+      expect(employeeService.update).toHaveBeenCalledTimes(1);
+      expect(employeeService.update).toHaveBeenCalledWith(1, body);
+    });
+
+    it('should throw an exception', () => {
+      const body: UpdateEmployeeDto = {
+        id: '1', name: 'neto', lastname: 'santos', email: 'neto@gmail.com', password: '12345'
+      } 
+
+      jest.spyOn(employeeService, 'update').mockRejectedValueOnce(new Error());
+
+      expect(employeeController.update(1, body)).rejects.toThrowError();
+    });
+  });
+
+  describe('remove', () => {
+    it('should remove a employee successfully', async () => {
+      const result = await employeeController.remove(1);
+
+      expect(result).toBeUndefined();
+    });
+
+    it('should throw an exception', () => {
+      jest.spyOn(employeeService, 'remove').mockRejectedValueOnce(new Error());
+
+      expect(employeeController.remove(1)).rejects.toThrowError();
+      expect(employeeService.remove).toHaveBeenCalledTimes(1);
+      expect(employeeService.remove).toHaveBeenCalledWith(1);
     });
   });
   
