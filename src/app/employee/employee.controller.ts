@@ -10,25 +10,25 @@ export class EmployeeController {
   @Post()
   create(@Body() createEmployeeDto: CreateEmployeeDto) {
     return this.employeeService.create(createEmployeeDto);
-  }
+  };
 
   @Get()
   findAll() {
     return this.employeeService.findAll();
-  }
+  };
 
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.employeeService.findOne(+id);
-  }
+  };
 
   @Patch(':id')
   update(@Param('id', ParseIntPipe) id: number, @Body() updateEmployeeDto: UpdateEmployeeDto) {
     return this.employeeService.update(+id, updateEmployeeDto);
-  }
+  };
 
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.employeeService.remove(+id);
-  }
+  };
 }

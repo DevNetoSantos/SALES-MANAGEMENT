@@ -6,23 +6,23 @@ import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class EmployeeService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) {};
 
   async create(createEmployeeDto: CreateEmployeeDto) {
     const data = {
       ...createEmployeeDto,
       password: await bcrypt.hash(createEmployeeDto.password, 10)
-    }
+    };
 
     const employeeExist = await this.prisma.employee.findFirst({
       where: {
         email: data.email
       }
-    })
+    });
 
     if(employeeExist) {
       throw new Error("this email already exists");
-    }
+    };
 
     await this.prisma.employee.create({
       data: {
@@ -33,8 +33,8 @@ export class EmployeeService {
       }
     });
 
-    return {messege: 'employee reguster successfully'}
-  }
+    return {messege: 'employee reguster successfully'};
+  };
 
   async findAll() {
     const employees = await this.prisma.employee.findMany({
@@ -51,46 +51,40 @@ export class EmployeeService {
       }
     });
     return employees;
-  }
+  };
 
   async findOne(id: number) {
     const employee = await this.prisma.employee.findUnique({where: {id}});
 
-    const employeeExist = await this.prisma.employee.findFirst({
-      where: {
-        id: id
-      }
-    })
-
-    if(!employeeExist) {
+    if(!employee) {
       throw new Error("this employee not found");
-    }
+    };
 
     return {
       ...employee,
       password: undefined
-    }
-  }
+    };
+  };
 
   async findByEmail(email: string) {
     return await this.prisma.employee.findFirst({where: {email}});
-  }
+  };
 
   async update(id: number, updateEmployeeDto: UpdateEmployeeDto) {
     const data = {
       ...updateEmployeeDto,
       password: await bcrypt.hash(updateEmployeeDto.password, 10)
-    }
+    };
 
     const employeeExist = await this.prisma.employee.findFirst({
       where: {
         email: data.email
       }
-    })
+    });
 
     if(employeeExist) {
       throw new Error("this email already exists");
-    }
+    };
 
     await this.prisma.employee.update({
       where: {id},
@@ -102,24 +96,18 @@ export class EmployeeService {
       }
     });
 
-    return {messege: 'Employee successfully updated'}
-  }
+    return {messege: 'Employee successfully updated'};
+  };
 
   async remove(id: number) {
     const employee = await this.prisma.employee.findUnique({where: {id}});
 
-    const employeeExist = await this.prisma.employee.findFirst({
-      where: {
-        id: id
-      }
-    })
-
-    if(!employeeExist) {
+    if(!employee) {
       throw new Error("this employee not found");
-    }
+    };
 
     await this.prisma.employee.delete({where: {id}});
 
-    return {messege: 'Employee delete successfully'}
-  }
-}
+    return {messege: 'Employee delete successfully'};
+  };
+};

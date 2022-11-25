@@ -10,25 +10,25 @@ export class ClientController {
   @Post()
   create(@Body() createClientDto: CreateClientDto) {
     return this.clientService.create(createClientDto);
-  }
+  };
 
   @Get()
   findAll() {
     return this.clientService.findAll();
-  }
+  };
 
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.clientService.findOne(+id);
-  }
+  };
 
   @Patch(':id')
   update(@Param('id', ParseIntPipe) id: number, @Body() updateClientDto: UpdateClientDto) {
     return this.clientService.update(+id, updateClientDto);
-  }
+  };
 
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.clientService.remove(+id);
-  }
+  };
 }

@@ -25,8 +25,8 @@ export class SaleService {
       }
     });
 
-    return {messege: 'successful sale '}
-  }
+    return {messege: 'successful sale '};
+  };
 
   async findAll() {
     const sales = await this.prisma.sale.findMany({
@@ -56,7 +56,7 @@ export class SaleService {
     });
 
     return sales;
-  }
+  };
 
   async findOne(id: number) {
     const sale = await this.prisma.sale.findUnique({where: {id},
@@ -90,12 +90,12 @@ export class SaleService {
     }
 
     return sale;
-  }
+  };
 
   update(id: number, updateSaleDto: UpdateSaleDto) {
     return `This action updates a #${id} sale`;
     //not edition comprovante compras
-  }
+  };
 
   async remove(id: number) {
     const sale = await this.prisma.sale.findUnique({where: {id}});
@@ -106,6 +106,6 @@ export class SaleService {
 
     await this.prisma.sale.delete({where: {id}});
 
-    return {messege: 'sale delete successfully'}
-  }
+    return {messege: 'sale delete successfully'};
+  };
 }

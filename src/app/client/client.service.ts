@@ -5,7 +5,7 @@ import { UpdateClientDto } from './dto/update-client.dto';
 
 @Injectable()
 export class ClientService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) {};
   
   async create(createClientDto: CreateClientDto) {
     const data = {
@@ -24,7 +24,7 @@ export class ClientService {
       data: { name: data.name, cpf: data.cpf }
     });
 
-    return {messege: 'client reguster successfully'}
+    return {messege: 'client reguster successfully'};
   };
 
   async findAll() {
@@ -40,11 +40,7 @@ export class ClientService {
       where: { id }, include: { sales: true }
     });
 
-    const clientExist = await this.prisma.client.findFirst({
-      where: { id: id }
-    });
-
-    if(!clientExist) {
+    if(!client) {
       throw new Error("this client does not exist");
     };
 

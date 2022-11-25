@@ -10,22 +10,22 @@ export class ProductController {
   @Post()
   create(@Body() createProductDto: CreateProductDto) {
     return this.productService.create(createProductDto);
-  }
+  };
 
   @Get()
   findAll() {
     return this.productService.findAll();
-  }
+  };
 
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: string) {
     return this.productService.findOne(+id);
-  }
+  };
 
   @Patch(':id')
   update(@Param('id', ParseIntPipe) id: string, @Body() updateProductDto: UpdateProductDto) {
     return this.productService.update(+id, updateProductDto);
-  }
+  };
 
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: string) {
