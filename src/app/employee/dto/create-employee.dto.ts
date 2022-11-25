@@ -24,4 +24,12 @@ export class CreateEmployeeDto {
     message: 'password too weak',
   })
   password: string;
+
+  constructor(employee?: Partial<CreateEmployeeDto>) {
+    this.id = employee?.id;
+    this.name = employee?.name;
+    this.lastname = employee?.lastname;
+    this.email = employee?.email;
+    this.password = employee?.password;
+  }
 }

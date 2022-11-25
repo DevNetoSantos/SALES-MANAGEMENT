@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/database/prisma.service';
+import { PrismaService } from '../../database/prisma.service';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class EmployeeService {
-  constructor(private prisma: PrismaService) {};
+  constructor(private  prisma: PrismaService) {};
 
   async create(createEmployeeDto: CreateEmployeeDto) {
     const data = {
