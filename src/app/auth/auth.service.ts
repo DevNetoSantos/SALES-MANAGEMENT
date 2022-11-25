@@ -8,7 +8,7 @@ export class AuthService {
   constructor(
     private employeeService: EmployeeService,
     private jwtService: JwtService
-  ) {}
+  ) {};
 
   async validateUser(email: string, password: string): Promise<any> {
     const user = await this.employeeService.findByEmail(email);
@@ -18,11 +18,11 @@ export class AuthService {
 
       if(isPasswordValid) {
         return { ...user, password: undefined }
-      }
-    }
+      };
+    };
 
-    throw new Error('Email anddres or password provided is incorrect.')
-  }
+    throw new Error('Email anddres or password provided is incorrect.');
+  };
 
   async login(user: any) {
     const payload = {
@@ -33,6 +33,6 @@ export class AuthService {
     return {
       access_token: this.jwtService.sign(payload),
     };
-  }
+  };
 
 }
