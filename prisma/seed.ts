@@ -5,21 +5,21 @@ const prisma = new PrismaClient()
 const main = async () => {
   const hasCode = nanoid();
 
-/*   const employee = await prisma.employee.create({
+   const employee = await prisma.employee.create({
     data: {
       name: 'Raimundo',
       lastname: 'neto',
       email: 'neto@gmail.com',
       password: '123456789',
     }
-  }); */
+  }); 
 
-/*   const client = await prisma.client.create({
+   const client = await prisma.client.create({
     data: {
       name: 'João',
       cpf: '45896235147',
     }
-  }); */
+  }); 
 
   const product = await prisma.product.create({
     data: {

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, Query } from '@nestjs/common';
 import { EmployeeService } from './employee.service';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
@@ -13,8 +13,8 @@ export class EmployeeController {
   };
 
   @Get()
-  findAll() {
-    return this.employeeService.findAll();
+  findAll(@Query('skip') skip: string, @Query('take') take: string) {
+    return this.employeeService.findAll({skip: Number(skip), take: Number(take)});
   };
 
   @Get(':id')

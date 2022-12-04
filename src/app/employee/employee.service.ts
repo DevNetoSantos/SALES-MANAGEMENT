@@ -3,6 +3,7 @@ import { PrismaService } from '../../database/prisma.service';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
 import * as bcrypt from 'bcrypt';
+import { request } from 'express';
 
 @Injectable()
 export class EmployeeService {
@@ -36,21 +37,43 @@ export class EmployeeService {
     return {messege: 'employee reguster successfully'};
   };
 
-  async findAll() {
-    const employees = await this.prisma.employee.findMany({
-      select: {
-        createdAt: true,
-        updatedAt: true,
-        name: true,
-        lastname: true,
-        email: true,
-        role: true
-      },
-      orderBy: {
-        id: 'desc'
-      }
-    });
-    return employees;
+  async findAll(params: { skip?: number; take?: number;}) {
+    const { skip, take } = params;
+
+    if (isNaN(skip)) {
+      return this.prisma.employee.findMany({
+          take,
+          select: {
+            id: true,
+            createdAt: true,
+            updatedAt: true,
+            name: true,
+            lastname: true,
+            email: true,
+            role: true
+          },
+          orderBy: {
+            id: 'desc'
+          },
+      });
+    }else{
+      return this.prisma.employee.findMany({
+          skip,
+          take,
+          select: {
+            id: true,
+            createdAt: true,
+            updatedAt: true,
+            name: true,
+            lastname: true,
+            email: true,
+            role: true
+          },
+          orderBy: {
+            id: 'desc'
+          },
+      });
+    }
   };
 
   async findOne(id: number) {

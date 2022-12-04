@@ -21,7 +21,7 @@ import { SaleModule } from './app/sale/sale.module';
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
-    },
+    }, 
   ],
 })
 export class AppModule {}
