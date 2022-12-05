@@ -37,43 +37,26 @@ export class EmployeeService {
     return {messege: 'employee reguster successfully'};
   };
 
-  async findAll(params: { skip?: number; take?: number;}) {
+  async findAll(params: {skip?: number; take?: number;}) {
     const { skip, take } = params;
+    const startIndex = (skip - 1) * take;
+    const endIndex = skip * take;
+    const employees = await this.prisma.employee.findMany({
+      select: {
+        id: true,
+        createdAt: true,
+        updatedAt: true,
+        name: true,
+        lastname: true,
+        email: true,
+        role: true
+      },
+      orderBy: {
+        id: 'desc'
+      },
+    });
 
-    if (isNaN(skip)) {
-      return this.prisma.employee.findMany({
-          take,
-          select: {
-            id: true,
-            createdAt: true,
-            updatedAt: true,
-            name: true,
-            lastname: true,
-            email: true,
-            role: true
-          },
-          orderBy: {
-            id: 'desc'
-          },
-      });
-    }else{
-      return this.prisma.employee.findMany({
-          skip,
-          take,
-          select: {
-            id: true,
-            createdAt: true,
-            updatedAt: true,
-            name: true,
-            lastname: true,
-            email: true,
-            role: true
-          },
-          orderBy: {
-            id: 'desc'
-          },
-      });
-    }
+    return employees.slice(startIndex, endIndex);
   };
 
   async findOne(id: number) {
