@@ -37,10 +37,7 @@ export class EmployeeService {
     return {messege: 'employee reguster successfully'};
   };
 
-  async findAll(params: {skip?: number; take?: number;}) {
-    const { skip, take } = params;
-    const startIndex = (skip - 1) * take;
-    const endIndex = skip * take;
+  async findAll() {
     const employees = await this.prisma.employee.findMany({
       select: {
         id: true,
@@ -56,7 +53,7 @@ export class EmployeeService {
       },
     });
 
-    return employees.slice(startIndex, endIndex);
+    return employees;
   };
 
   async findOne(id: number) {

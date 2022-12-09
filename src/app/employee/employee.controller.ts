@@ -13,8 +13,8 @@ export class EmployeeController {
   };
 
   @Get()
-  findAll(@Query('skip') skip: string, @Query('take') take: string) {
-    return this.employeeService.findAll({skip: Number(skip), take: Number(take)});
+  findAll() {
+    return this.employeeService.findAll();
   };
 
   @Get(':id')

@@ -29,7 +29,7 @@ export class ClientService {
 
   async findAll() {
     const client = await this.prisma.client.findMany({
-      include: { sales: true }
+      include: { sales: true}
     });
     
     return client;
