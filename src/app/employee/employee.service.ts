@@ -3,7 +3,6 @@ import { PrismaService } from '../../database/prisma.service';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
 import * as bcrypt from 'bcrypt';
-import { request } from 'express';
 
 @Injectable()
 export class EmployeeService {
