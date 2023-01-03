@@ -1,38 +1,59 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from '../../database/prisma.service';
-import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { EmployeeService } from './employee.service';
 
-const employeeEntityList: CreateEmployeeDto[] = [   //entidade criada lá em DTO
-  new CreateEmployeeDto({id: '1', name: 'neto', lastname: 'santos', email: 'neto@gmail.com', password: '12345',}),
-  new CreateEmployeeDto({id: '2', name: 'levi', lastname: 'bruno', email: 'levi@gmail.com', password: '54321'}),
-]
+const fakeEmployee = [
+  {
+    id: 1,
+    name: 'teste1',
+    lastname: 'testado1',
+    email: 'teste1@gmail.com',
+    password: '12345',
+  },
+  {
+    id: 2,
+    name: 'teste2',
+    lastname: 'testado2',
+    email: 'teste2@gmail.com',
+    password: '12345',
+  },
+  {
+    id: 3,
+    name: 'teste3',
+    lastname: 'testado3',
+    email: 'teste3@gmail.com',
+    password: '12345',
+  },
+];
 
+const prismaMock = {
+  employee: {
+    create: jest.fn().mockReturnValue(fakeEmployee[0]),
+    findMany: jest.fn().mockResolvedValue(fakeEmployee),
+    findUnique: jest.fn().mockResolvedValue(fakeEmployee[0]),
+    update: jest.fn().mockResolvedValue(fakeEmployee[0]),
+    delete: jest.fn(), // O método delete não retorna nada
+  },
+};
 
 describe('EmployeeService', () => {
   let employeeService: EmployeeService;
   let employeeRepository: PrismaService;
 
-  const mockEmployeerService = {
-    findMany: jest.fn().mockResolvedValue(employeeEntityList),
-    findAll: jest.fn().mockResolvedValue(employeeEntityList),
-    findUnique: jest.fn(),
-    findFirst: jest.fn(),
-    create: jest.fn(),
-    update: jest.fn(),
-    delete: jest.fn(),
-  }
-
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [EmployeeService, PrismaService]
-    })
-    .overrideProvider(EmployeeService)
-    .useValue(mockEmployeerService)
-    .compile();
+      providers: [
+        EmployeeService,
+        { provide: PrismaService, useValue: prismaMock }
+      ],
+    }).compile();
 
     employeeService = module.get<EmployeeService>(EmployeeService);
     employeeRepository = module.get<PrismaService>(PrismaService)
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
   it('should be defined', () => {
@@ -41,13 +62,12 @@ describe('EmployeeService', () => {
   });
 
   describe('findAll', () => {
-    it('should return a employee list successfuly', async () => {
-      //Act
-      const result = await employeeService.findAll();
+    it(`should return an array of employee`, async () => {
+      const response = await employeeService.findAll();
 
-      //Assert
-      expect(result).toEqual(employeeEntityList);
-      //expect(employeeRepository.findMany).toHaveBeenCalledTimes(1);
-    })
+      expect(response).toEqual(fakeEmployee);
+      expect(employeeRepository.employee.findMany).toHaveBeenCalledTimes(1);
+    });
   });
+
 });
