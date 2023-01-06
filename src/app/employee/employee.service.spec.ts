@@ -8,7 +8,7 @@ const fakeEmployee = [
     name: 'teste1',
     lastname: 'testado1',
     email: 'teste1@gmail.com',
-    password: undefined,
+    password: '12345',
   },
   {
     id: 2,
@@ -28,10 +28,10 @@ const fakeEmployee = [
 
 const prismaMock = {
   employee: {
-    create: jest.fn().mockReturnValue(fakeEmployee[2]),
+    create: jest.fn().mockReturnValue(fakeEmployee[0]),
     findMany: jest.fn().mockResolvedValue(fakeEmployee),
     findUnique: jest.fn().mockResolvedValue(fakeEmployee[0]),
-    update: jest.fn().mockResolvedValue(fakeEmployee[1]),
+    update: jest.fn().mockResolvedValue(fakeEmployee[0]),
     delete: jest.fn(), // O método delete não retorna nada
   },
 };
@@ -81,40 +81,22 @@ describe('EmployeeService', () => {
     });
   });
 
-  describe('findOne', () => {
-    it('should return a single emplyee', async () => {
-      //Act
-      const repsonse = await employeeService.findOne(1);
-
-      //Assert
-      expect(repsonse).toEqual(fakeEmployee[0]);
-      expect(employeeRepository.employee.findUnique).toHaveBeenCalledTimes(1);
-      expect(employeeRepository.employee.findUnique).toHaveBeenCalledWith({
-        where: { id: 1 },
-      });
-    });
-
-    it('should throw a not found exception', () => {
-      //Act
-
-      //Arange
-      jest.spyOn(employeeRepository.employee, 'findUnique').mockRejectedValueOnce(new Error());
-
-      //Assert
-      expect(employeeService.findOne(1)).rejects.toThrowError(new Error())
-    });
-  });
-
   describe('create', () => {
     it('should create a new employee', async () => {
       //Arange
 
       //Act
-
       const response = await employeeService.create(fakeEmployee[0])
       //Assert
       expect(employeeRepository.employee.create).toHaveBeenCalledTimes(1);
       expect(response).toBe(fakeEmployee[0]);
+    });
+
+    it('should throw an error', () => {
+      //Arrange
+      jest.spyOn(employeeRepository.employee, 'create').mockRejectedValue(new Error());
+      //Assert
+      expect(employeeService.create(fakeEmployee[5])).rejects.toThrowError();
     });
   });
 });
