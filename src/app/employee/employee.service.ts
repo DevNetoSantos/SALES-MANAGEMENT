@@ -9,18 +9,11 @@ export class EmployeeService {
   constructor(private  prisma: PrismaService) {};
 
   async create(createEmployeeDto: CreateEmployeeDto) {
-    const data = {
-      ...createEmployeeDto,
-      password: await bcrypt.hash(createEmployeeDto.password, 10)
-    };
-
     try {
-      return await this.prisma.employee.create({
+       return await this.prisma.employee.create({
         data: {
-          name: data.name,
-          lastname: data.lastname,
-          email: data.email,
-          password: data.password
+          ...createEmployeeDto,
+          password: await bcrypt.hash(createEmployeeDto.password, 10)
         }
       });
     } catch (error) {

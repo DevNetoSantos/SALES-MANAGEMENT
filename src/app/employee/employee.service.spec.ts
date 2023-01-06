@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from '../../database/prisma.service';
+import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { EmployeeService } from './employee.service';
 
 const fakeEmployee = [
@@ -26,12 +27,20 @@ const fakeEmployee = [
   },
 ];
 
+const updateFakeEmployee = {
+  id: 1,
+  name: 'teste25',
+  lastname: 'testado25',
+  email: 'teste25@gmail.com',
+  password: '12345',
+};
+
 const prismaMock = {
   employee: {
     create: jest.fn().mockReturnValue(fakeEmployee[0]),
     findMany: jest.fn().mockResolvedValue(fakeEmployee),
     findUnique: jest.fn().mockResolvedValue(fakeEmployee[0]),
-    update: jest.fn().mockResolvedValue(fakeEmployee[0]),
+    update: jest.fn().mockResolvedValue(updateFakeEmployee),
     delete: jest.fn(), // O método delete não retorna nada
   },
 };
@@ -77,18 +86,17 @@ describe('EmployeeService', () => {
 
       //Asert
       expect(employeeService.findAll()).rejects.toThrowError();
-
     });
   });
 
   describe('create', () => {
     it('should create a new employee', async () => {
-      //Arange
-
+      //Arange0t
       //Act
       const response = await employeeService.create(fakeEmployee[0])
       //Assert
       expect(employeeRepository.employee.create).toHaveBeenCalledTimes(1);
+      expect(response).toEqual(fakeEmployee[0]);
       expect(response).toBe(fakeEmployee[0]);
     });
 
@@ -97,6 +105,24 @@ describe('EmployeeService', () => {
       jest.spyOn(employeeRepository.employee, 'create').mockRejectedValue(new Error());
       //Assert
       expect(employeeService.create(fakeEmployee[5])).rejects.toThrowError();
+    });
+  });
+
+  describe('update', () => {
+    it('should update a employee', async () =>{
+      //Arrange
+      const data = {
+        id: 1,
+        name: 'teste25',
+        lastname: 'testado25',
+        email: 'teste25@gmail.com',
+        password: '12345',
+      }
+      //Act
+      const response = await employeeService.update(0, data);
+      //Assert
+      expect(response).toEqual(updateFakeEmployee);
+      //expect(employeeRepository.employee.update).toHaveBeenCalledTimes(1);
     });
   });
 });
