@@ -138,9 +138,23 @@ describe('EmployeeService', () => {
     it('should delete a employee and return empty', async () => {
       //Arrange
       //Act
+      const response = await employeeService.remove(0);
       //Assert
+      expect(response).toEqual(undefined);
       expect(await employeeService.remove(0)).toBeUndefined();
-      expect(await employeeRepository.employee.delete).toHaveBeenCalledTimes(1);
+      expect(await employeeRepository.employee.delete).toHaveBeenCalledTimes(2);
+    });
+
+    it('should return NotFoundException if employee does not exist', async () => {
+      //Arrange
+      jest.spyOn(employeeRepository.employee, 'delete').mockRejectedValue(new Error());
+      //Act
+      //Assert
+      try {
+        await employeeService.remove(0);
+      } catch (error) {
+        expect(error).toEqual(new Error());
+      }
     });
   });
 });
