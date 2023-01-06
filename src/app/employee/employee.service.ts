@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
@@ -70,27 +70,20 @@ export class EmployeeService {
       password: await bcrypt.hash(updateEmployeeDto.password, 10)
     };
 
-    const employeeExist = await this.prisma.employee.findFirst({
-      where: {
-        email: data.email
-      }
-    });
+    try {
+      return await this.prisma.employee.update({
+        where: { id },
+        data: {
+          name: data.name,
+          lastname: data.lastname,
+          email: data.email,
+          password: data.password
+        }
+      });
+    } catch (error) {
+      throw new NotFoundException(error.message);
+    }
 
-    if(employeeExist) {
-      throw new Error("this email already exists");
-    };
-
-    await this.prisma.employee.update({
-      where: {id},
-      data: {
-        name: data.name,
-        lastname: data.lastname,
-        email: data.email,
-        password: data.password
-      }
-    });
-
-    return {messege: 'Employee successfully updated'};
   };
 
   async remove(id: number) {
