@@ -58,36 +58,26 @@ export class EmployeeService {
   };
 
   async update(id: number, updateEmployeeDto: UpdateEmployeeDto) {
-    const data = {
-      ...updateEmployeeDto,
-      password: await bcrypt.hash(updateEmployeeDto.password, 10)
-    };
-
     try {
       return await this.prisma.employee.update({
         where: { id },
         data: {
-          name: data.name,
-          lastname: data.lastname,
-          email: data.email,
-          password: data.password
+          ...updateEmployeeDto,
+          password: await bcrypt.hash(updateEmployeeDto.password, 10)
         }
       });
     } catch (error) {
-      throw new NotFoundException(error.message);
+      throw new Error(error);
     }
-
   };
 
   async remove(id: number) {
-    const employee = await this.prisma.employee.findUnique({where: {id}});
-
-    if(!employee) {
-      throw new Error("this employee not found");
-    };
-
-    await this.prisma.employee.delete({where: {id}});
-
-    return {messege: 'Employee delete successfully'};
+    await this.findOne(id);
+    
+    try {
+      await this.prisma.employee.delete({where: {id}});
+    } catch (error) {
+      throw new Error();
+    }
   };
 };

@@ -41,7 +41,7 @@ const prismaMock = {
     findMany: jest.fn().mockResolvedValue(fakeEmployee),
     findUnique: jest.fn().mockResolvedValue(fakeEmployee[0]),
     update: jest.fn().mockResolvedValue(updateFakeEmployee),
-    delete: jest.fn(), // O método delete não retorna nada
+    delete: jest.fn().mockReturnValue(undefined) // O método delete não retorna nada
   },
 };
 
@@ -122,7 +122,25 @@ describe('EmployeeService', () => {
       const response = await employeeService.update(0, data);
       //Assert
       expect(response).toEqual(updateFakeEmployee);
-      //expect(employeeRepository.employee.update).toHaveBeenCalledTimes(1);
+      expect(employeeRepository.employee.update).toHaveBeenCalledTimes(1);
+    });
+
+    it('sould throw an error', () =>{
+      //Arrange
+      jest.spyOn(employeeRepository.employee, 'update').mockRejectedValueOnce(new Error());
+      //Act
+      //Assert
+      expect(employeeService.update).rejects.toThrowError();
+    });
+  });
+
+  describe('delete', () => {
+    it('should delete a employee and return empty', async () => {
+      //Arrange
+      //Act
+      //Assert
+      expect(await employeeService.remove(0)).toBeUndefined();
+      expect(await employeeRepository.employee.delete).toHaveBeenCalledTimes(1);
     });
   });
 });
