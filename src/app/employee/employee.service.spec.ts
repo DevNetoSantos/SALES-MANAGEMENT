@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from '../../database/prisma.service';
+import { CreateCompanyDto } from '../company/dto/create-company.dto';
 import { EmployeeService } from './employee.service';
 
 const fakeEmployee = [
@@ -63,10 +64,24 @@ describe('EmployeeService', () => {
 
   describe('findAll', () => {
     it(`should return an array of employee`, async () => {
+      //Act
       const response = await employeeService.findAll();
 
+      //Assert
       expect(response).toEqual(fakeEmployee);
       expect(employeeRepository.employee.findMany).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('create', () => {
+    it('should create a new employee', async () => {
+      //Arange
+
+      //Act
+      const response = await employeeService.create(fakeEmployee[0])
+      //Assert
+      expect(employeeRepository.employee.create).toHaveBeenCalledTimes(1);
+      expect(response).toBe(fakeEmployee[0]);
     });
   });
 

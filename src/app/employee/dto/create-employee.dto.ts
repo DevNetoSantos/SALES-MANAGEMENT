@@ -1,7 +1,7 @@
 import { IsEmail, IsNotEmpty, IsString, Matches, MaxLength, MinLength } from 'class-validator';
 
 export class CreateEmployeeDto {
-  id: string;
+  id: number;
 
   @IsNotEmpty()
   @MaxLength(100)

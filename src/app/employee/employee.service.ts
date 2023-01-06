@@ -14,26 +14,18 @@ export class EmployeeService {
       password: await bcrypt.hash(createEmployeeDto.password, 10)
     };
 
-    const employeeExist = await this.prisma.employee.findFirst({
-      where: {
-        email: data.email
-      }
-    });
-
-    if(employeeExist) {
-      throw new Error("this email already exists");
-    };
-
-    await this.prisma.employee.create({
-      data: {
-        name: data.name,
-        lastname: data.lastname,
-        email: data.email,
-        password: data.password
-      }
-    });
-
-    return {messege: 'employee reguster successfully'};
+    try {
+      return await this.prisma.employee.create({
+        data: {
+          name: data.name,
+          lastname: data.lastname,
+          email: data.email,
+          password: data.password
+        }
+      });
+    } catch (error) {
+      throw new Error(error);
+    }
   };
 
   async findAll() {
@@ -69,7 +61,7 @@ export class EmployeeService {
   };
 
   async findByEmail(email: string) {
-    return await this.prisma.employee.findFirst({where: {email}});
+    return await this.prisma.employee.findFirstOrThrow({where: {email}});
   };
 
   async update(id: number, updateEmployeeDto: UpdateEmployeeDto) {
