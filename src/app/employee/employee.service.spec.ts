@@ -1,6 +1,6 @@
+import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from '../../database/prisma.service';
-import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { EmployeeService } from './employee.service';
 
 const fakeEmployee = [
@@ -80,12 +80,32 @@ describe('EmployeeService', () => {
       expect(employeeRepository.employee.findMany).toHaveBeenCalledTimes(1);
     });
 
-    it('should throw an exception', () => {
+    it('should return error if it has no data', () => {
       //Arange
       jest.spyOn(employeeRepository.employee, 'findMany').mockRejectedValue(new Error());
 
       //Asert
-      expect(employeeService.findAll()).rejects.toThrowError();
+      expect(employeeService.findAll()).rejects.toThrowError(new NotFoundException());
+    });
+  });
+
+  describe('findUnique', () => {
+    it('should return a single post', async () => {
+      //Arrange
+      //Act
+      const response = await employeeService.findOne(1);
+      //Assert
+      expect(response).toEqual(fakeEmployee[0]);
+      expect(await employeeRepository.employee.findUnique).toHaveBeenCalledTimes(1);
+    });
+
+    it('should return empty if not found employee', async () => {
+      //Arrange
+      jest.spyOn(employeeRepository.employee, 'findUnique').mockReturnValue(undefined);
+      //Act
+      const response = await employeeService.findOne(99);
+      //Assert
+      expect(response).toBe(undefined);
     });
   });
 

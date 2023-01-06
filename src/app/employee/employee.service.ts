@@ -22,35 +22,32 @@ export class EmployeeService {
   };
 
   async findAll() {
-    const employees = await this.prisma.employee.findMany({
-      select: {
-        id: true,
-        createdAt: true,
-        updatedAt: true,
-        name: true,
-        lastname: true,
-        email: true,
-        role: true
-      },
-      orderBy: {
-        id: 'desc'
-      },
-    });
-
-    return employees;
+    try {
+      return await this.prisma.employee.findMany({
+        select: {
+          id: true,
+          createdAt: true,
+          updatedAt: true,
+          name: true,
+          lastname: true,
+          email: true,
+          role: true
+        },
+        orderBy: {
+          id: 'desc'
+        },
+      });
+    } catch (error) {
+      throw new NotFoundException();
+    }
   };
 
   async findOne(id: number) {
-    const employee = await this.prisma.employee.findUnique({where: {id}});
-
-    if(!employee) {
-      throw new Error("this employee not found");
-    };
-
-    return {
-      ...employee,
-      password: undefined
-    };
+    try {
+      return await this.prisma.employee.findUnique({where: {id}});
+    } catch (error) {
+      throw new NotFoundException();
+    }
   };
 
   async findByEmail(email: string) {
@@ -73,7 +70,7 @@ export class EmployeeService {
 
   async remove(id: number) {
     await this.findOne(id);
-    
+
     try {
       await this.prisma.employee.delete({where: {id}});
     } catch (error) {
