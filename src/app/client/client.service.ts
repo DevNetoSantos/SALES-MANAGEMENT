@@ -1,5 +1,4 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { NotFoundError } from '@prisma/client/runtime';
 import { PrismaService } from '../../database/prisma.service';
 import { CreateClientDto } from './dto/create-client.dto';
 import { UpdateClientDto } from './dto/update-client.dto';
@@ -9,17 +8,12 @@ export class ClientService {
   constructor(private prisma: PrismaService) {};
   
   async create(createClientDto: CreateClientDto) {
-    const existEmail = await this.prisma.client.findFirst({where: {cpf: createClientDto.cpf}});
-    
-    if(existEmail) {
-      throw new Error('this cpf already exists')
-    }
 
     try {
-      await this.prisma.client.create({data:{...createClientDto}});
+      return await this.prisma.client.create({data:{...createClientDto}});
     } catch (error) {
       throw new Error(error);
-    }
+    };
   };
 
   async findAll() {
@@ -41,6 +35,7 @@ export class ClientService {
 
     return client;
   };
+
 
   async update(id: number, updateClientDto: UpdateClientDto) {
     const client = await this.prisma.client.findFirst({ where: { id } });

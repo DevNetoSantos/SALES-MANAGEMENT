@@ -37,7 +37,9 @@ describe('ClientService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [ClientService, {provide: PrismaService, useValue: {prismMock}}],
+      providers: [
+        ClientService, 
+        {provide: PrismaService, useValue: prismMock}],
     }).compile();
 
     clientService = module.get<ClientService>(ClientService);
@@ -59,7 +61,14 @@ describe('ClientService', () => {
       //Act
       const response = await clientService.create(fakeClient[0]);
       //Assert
-      expect(response).toEqual(fakeClient[0]);
+      expect(response).toBe(fakeClient[0]);
     });
+
+/*     it('should throw an error if cpf is in use', () => {
+      //Arrange
+      jest.spyOn(clientRepository.client, 'create').mockRejectedValue(new Error());
+      //Assert
+      expect(clientService.create(fakeClient[5])).rejects.toThrowError('error');
+    }); */
   });
 });
