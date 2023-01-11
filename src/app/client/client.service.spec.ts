@@ -1,3 +1,4 @@
+import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from '../../database/prisma.service';
 import { ClientService } from './client.service';
@@ -24,7 +25,7 @@ const prismMock = {
   client: {
     create: jest.fn().mockReturnValue(fakeClient[0]),
     findMany: jest.fn().mockResolvedValue(fakeClient),
-    findUnique: jest.fn().mockResolvedValue(fakeClient[0]),
+    findFirst: jest.fn().mockResolvedValue(fakeClient[0]),
     update: jest.fn().mockResolvedValue(fakeClient),
     delete: jest.fn().mockReturnValue(undefined) // O método delete não retorna nada
   }
@@ -43,11 +44,22 @@ describe('ClientService', () => {
     clientRepository = module.get<PrismaService>(PrismaService);
   });
 
-  it('should be defined', () => {
-    expect(clientService).toBeDefined();
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
-  it('shoudl be defined', () => {
-      expect(clientRepository).toBeDefined();
+  it('should be defined', () => {
+    expect(clientService).toBeDefined();
+    expect(clientRepository).toBeDefined();
+  });
+
+  describe('create', () => {
+    it('should create a new client', async () => {
+      //Arrange
+      //Act
+      const response = await clientService.create(fakeClient[0]);
+      //Assert
+      expect(response).toEqual(fakeClient[0]);
+    });
   });
 });

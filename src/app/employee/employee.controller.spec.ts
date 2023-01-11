@@ -5,11 +5,11 @@ import { EmployeeController } from './employee.controller';
 import { EmployeeService } from './employee.service';
 
 const employeeEntityList: CreateEmployeeDto[] = [
-  new CreateEmployeeDto({ id: '1', name: 'neto', lastname: 'santos', email: 'neto@gmail.com', password: '12345' })
+  new CreateEmployeeDto({ id: 1, name: 'neto', lastname: 'santos', email: 'neto@gmail.com', password: '12345' })
 ]
 
 const newEmployeeEntity = new CreateEmployeeDto({
-  id: '2',
+  id: 2,
   name: 'new user',
   lastname: 'new lastname',
   email: 'new email',
@@ -69,7 +69,7 @@ describe('EmployeeController', () => {
   describe('create', () => {
     it('should create new employeeitem successfully', async () => {
       const body: CreateEmployeeDto = {
-        id: '2',
+        id: 2,
         name: 'new user',
         lastname: 'new lastname',
         email: 'new email',
@@ -85,7 +85,7 @@ describe('EmployeeController', () => {
 
     it('should throw an exception', () => {
       const body: CreateEmployeeDto = {
-        id: '2',
+        id: 2,
         name: 'new user',
         lastname: 'new lastname',
         email: 'new email',
@@ -117,7 +117,7 @@ describe('EmployeeController', () => {
   describe('update', () => {
     it('should update a item employee successfully', async () => {
       const body: UpdateEmployeeDto = {
-        id: '1', name: 'neto', lastname: 'santos', email: 'neto@gmail.com', password: '12345'
+        id: 1, name: 'neto', lastname: 'santos', email: 'neto@gmail.com', password: '12345'
       } 
       const result = await employeeController.update(1, body );
 
@@ -128,7 +128,7 @@ describe('EmployeeController', () => {
 
     it('should throw an exception', () => {
       const body: UpdateEmployeeDto = {
-        id: '1', name: 'neto', lastname: 'santos', email: 'neto@gmail.com', password: '12345'
+        id: 1, name: 'neto', lastname: 'santos', email: 'neto@gmail.com', password: '12345'
       } 
 
       jest.spyOn(employeeService, 'update').mockRejectedValueOnce(new Error());

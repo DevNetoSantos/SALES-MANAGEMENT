@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { NotFoundError } from '@prisma/client/runtime';
 import { PrismaService } from '../../database/prisma.service';
 import { CreateClientDto } from './dto/create-client.dto';
 import { UpdateClientDto } from './dto/update-client.dto';
@@ -8,23 +9,17 @@ export class ClientService {
   constructor(private prisma: PrismaService) {};
   
   async create(createClientDto: CreateClientDto) {
-    const data = {
-      ...createClientDto
-    };
+    const existEmail = await this.prisma.client.findFirst({where: {cpf: createClientDto.cpf}});
+    
+    if(existEmail) {
+      throw new Error('this cpf already exists')
+    }
 
-    const clientExist = await this.prisma.client.findFirst({
-      where: { cpf: data.cpf }
-    });
-
-    if(clientExist) {
-      throw new Error("this client already exists");
-    };
-
-    await this.prisma.client.create({
-      data: { name: data.name, cpf: data.cpf }
-    });
-
-    return {messege: 'client reguster successfully'};
+    try {
+      await this.prisma.client.create({data:{...createClientDto}});
+    } catch (error) {
+      throw new Error(error);
+    }
   };
 
   async findAll() {
@@ -36,7 +31,7 @@ export class ClientService {
   };
 
   async findOne(id: number) {
-    const client = await this.prisma.client.findUnique({
+    const client = await this.prisma.client.findFirst({
       where: { id }, include: { sales: true }
     });
 
@@ -48,7 +43,7 @@ export class ClientService {
   };
 
   async update(id: number, updateClientDto: UpdateClientDto) {
-    const client = await this.prisma.client.findUnique({ where: { id } });
+    const client = await this.prisma.client.findFirst({ where: { id } });
 
     const data = {
       ...updateClientDto
@@ -64,7 +59,7 @@ export class ClientService {
   };
 
   async remove(id: number) {
-    const client = await this.prisma.client.findUnique({where: {id}});
+    const client = await this.prisma.client.findFirst({where: {id}});
 
     if(!client) {
       throw new Error("this client does not exist");
