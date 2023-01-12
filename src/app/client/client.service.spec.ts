@@ -26,6 +26,7 @@ const prismMock = {
     create: jest.fn().mockReturnValue(fakeClient[0]),
     findMany: jest.fn().mockResolvedValue(fakeClient),
     findFirst: jest.fn().mockResolvedValue(fakeClient[0]),
+    findUniqueOrThrow: jest.fn().mockResolvedValue(fakeClient[0]),
     update: jest.fn().mockResolvedValue(fakeClient),
     delete: jest.fn().mockReturnValue(undefined) // O método delete não retorna nada
   }
@@ -70,6 +71,43 @@ describe('ClientService', () => {
       jest.spyOn(clientRepository.client, 'create').mockRejectedValue(new Error());
       //Assert
       expect(clientService.create(fakeClient[5])).rejects.toThrowError();
-    }); 
+    });
+  });
+
+  describe('findMany', () => {
+    it(`should return an array of client`, async () => {
+      //Act
+      const response = await clientService.findAll();
+      //Assert
+      expect(response).toEqual(fakeClient);
+      expect(clientRepository.client.findMany).toHaveBeenCalledTimes(1);
+    });
+
+    it('should return error if it has an empty array', () => {
+      //Arrange
+      jest.spyOn(clientRepository.client, 'findMany').mockRejectedValue(new Error());
+      //Act
+      //Assert
+      expect(clientService.findAll()).rejects.toThrowError(new NotFoundException());
+    });
+  });
+
+  describe('findUniqueOrThrow', () => {
+    it('Should return an unique client', async () => {
+      //Arrange 
+      //Act
+      const response = await clientService.findOne(0); 
+      //Assert
+      expect(response).toEqual(fakeClient[0])
+      expect(clientRepository.client.findUniqueOrThrow).toHaveBeenCalledTimes(1);
+    });
+
+    it('Should return an error if not found client', () => {
+      //Arrange
+      jest.spyOn(clientRepository.client, 'findUniqueOrThrow').mockRejectedValue(new Error());
+      //Act
+      //Assert
+      expect(clientService.findOne(99)).rejects.toThrowError(new NotFoundException());
+    });
   });
 });

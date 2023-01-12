@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { json } from 'express';
 import { PrismaService } from '../../database/prisma.service';
 import { CreateClientDto } from './dto/create-client.dto';
 import { UpdateClientDto } from './dto/update-client.dto';
@@ -17,23 +18,21 @@ export class ClientService {
   };
 
   async findAll() {
-    const client = await this.prisma.client.findMany({
-      include: { sales: true}
-    });
-    
-    return client;
+    try {
+      return await this.prisma.client.findMany({include: {sales: true}});
+    } catch (error) {
+      throw new NotFoundException();
+    }
   };
 
   async findOne(id: number) {
-    const client = await this.prisma.client.findFirst({
-      where: { id }, include: { sales: true }
-    });
-
-    if(!client) {
-      throw new Error("this client does not exist");
-    };
-
-    return client;
+    try {
+      return await this.prisma.client.findUniqueOrThrow({
+        where: { id }, include: { sales: true }
+      });
+    } catch (error) {
+      throw new NotFoundException();
+    }
   };
 
 
@@ -54,14 +53,12 @@ export class ClientService {
   };
 
   async remove(id: number) {
-    const client = await this.prisma.client.findFirst({where: {id}});
+    await this.findOne(id);
 
-    if(!client) {
-      throw new Error("this client does not exist");
-    };
-
-    await this.prisma.client.delete({where: {id}});
-
-    return {messege: 'client delete successfully'};
+    try {
+      await this.prisma.client.delete({where: {id}});
+    } catch (error) {
+      throw new Error();
+    }
   };
 }
