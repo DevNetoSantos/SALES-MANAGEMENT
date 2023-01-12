@@ -27,7 +27,7 @@ const prismMock = {
     findMany: jest.fn().mockResolvedValue(fakeClient),
     findFirst: jest.fn().mockResolvedValue(fakeClient[0]),
     findUniqueOrThrow: jest.fn().mockResolvedValue(fakeClient[0]),
-    update: jest.fn().mockResolvedValue(fakeClient),
+    update: jest.fn().mockResolvedValue(fakeClient[0]),
     delete: jest.fn().mockReturnValue(undefined) // O método delete não retorna nada
   }
 }
@@ -108,6 +108,61 @@ describe('ClientService', () => {
       //Act
       //Assert
       expect(clientService.findOne(99)).rejects.toThrowError(new NotFoundException());
+    });
+  });
+
+  describe('update', () => {
+    it('Sould update a client', async () => {
+      //Arrange
+      //Act
+      const response = await clientService.update(1, fakeClient[0]);
+      //Assert
+      expect(response).toEqual(fakeClient[0]);
+      expect(clientRepository.client.update).toHaveBeenCalledTimes(1);
+      expect(clientRepository.client.update).toHaveBeenCalledWith({
+        where: {id: 1},
+        data: fakeClient[0]
+      });
+    });
+
+    it('should return NotFoundException when no client is found', async () => {
+      //Arrange
+      const unexistingClient = {
+        id: 99,
+        name: 'notfound',
+        cpf: '11111111111'
+      }
+      jest.spyOn(clientRepository.client, 'update').mockRejectedValue(new Error());
+      //Act
+      //Assert
+      try {
+        await clientService.update(99, unexistingClient);
+      } catch (error) {
+        expect(error).toEqual(new NotFoundException());
+      }
+    });
+  });
+
+  describe('delete', () => {
+    it('Should delete client and return empty body', async () => {
+      //Arrange
+      //Act
+      //Assert
+      expect(await clientService.remove(1)).toBeUndefined();
+      expect(clientRepository.client.delete).toHaveBeenCalledTimes(1);
+      expect(clientRepository.client.delete).toHaveBeenCalledWith({ where: {id: 1} });
+    });
+
+    it('Should return NotFoundException if client does not exist', async () => {
+      //Arrange
+      jest.spyOn(clientRepository.client, 'delete').mockRejectedValue(new Error());
+      //Act
+      //Assert
+      try {
+        await clientService.remove(99);
+      } catch (error) {
+        expect(error).toEqual(new NotFoundException());
+      }
     });
   });
 });

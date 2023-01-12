@@ -5,7 +5,7 @@ import { CreateClientDto } from './dto/create-client.dto';
 import { UpdateClientDto } from './dto/update-client.dto';
 
 @Injectable()
-export class ClientService {
+export class ClientService {  
   constructor(private prisma: PrismaService) {};
   
   async create(createClientDto: CreateClientDto) {
