@@ -37,28 +37,21 @@ export class ClientService {
 
 
   async update(id: number, updateClientDto: UpdateClientDto) {
-    const client = await this.prisma.client.findFirst({ where: { id } });
-
-    const data = {
-      ...updateClientDto
-    };
-
-    if(!client) {
-      throw new Error("this client does not exist");
-    };
-
-    await this.prisma.client.update({where: {id}, data: {name: data.name, cpf: data.cpf}});
-
-    return {messege: 'client update successfully'};
+    try {
+      return await this.prisma.client.update({
+       where: {id},
+       data: {...updateClientDto}
+      });
+    } catch (error) {
+      throw new NotFoundException();
+    }
   };
 
   async remove(id: number) {
-    await this.findOne(id);
-
     try {
       await this.prisma.client.delete({where: {id}});
     } catch (error) {
-      throw new Error();
+      throw new NotFoundException();
     }
   };
 }
