@@ -28,7 +28,7 @@ const primsMock = {
     update: jest.fn(),
     delete: jest.fn(),
   }
-}
+};
 
 describe('CompanyService', () => {
   let companyService: CompanyService;
@@ -46,8 +46,26 @@ describe('CompanyService', () => {
     companyRepositoy = module.get<PrismaService>(PrismaService);
   });
 
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('should be defined', () => {
     expect(companyService).toBeDefined();
     expect(companyRepositoy).toBeDefined();
+  });
+
+  describe('create', () => {
+    it('Should create a new client', async () => {
+      //Arrange
+      //Act
+      const response = await companyService.create(fakeCompany[0]);
+      //Assert
+      expect(response).toEqual(fakeCompany[0]);
+      expect(companyRepositoy.company.create).toHaveBeenCalledTimes(1);
+      expect(companyRepositoy.company.create).toHaveBeenCalledWith({
+        data: fakeCompany[0]
+      });
+    });
   });
 });
