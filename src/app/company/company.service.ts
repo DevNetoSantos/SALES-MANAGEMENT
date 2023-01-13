@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
@@ -8,66 +8,47 @@ export class CompanyService {
   constructor(private prisma: PrismaService) {}
 
   async create(createCompanyDto: CreateCompanyDto) {
-    const data = createCompanyDto;
-
-    const companyExist = await this.prisma.company.findFirst({
-      where: { cnpj: data.cnpj }
-    });
-
-    if(companyExist) {
-      throw new Error("this company already exists");
-    };
-
-    await this.prisma.company.create({ data });
-
-    return {messege: 'company register successfully'}
-  }
+    try {
+      return await this.prisma.company.create({
+        data: {...createCompanyDto}
+      });
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
 
   async findAll() {
-    const company = await this.prisma.company.findMany({
-      include: {
-        products: true
-      }
-    });
-    
-    return company;
-  }
+    try {
+      return await this.prisma.company.findMany({ include: { products: true } });
+    } catch (error) {
+      throw new NotFoundException();
+    }
+  };
 
   async findOne(id: number) {
-    const company = await this.prisma.company.findUniqueOrThrow({where: {id}, include: {products: true} });
-
-    if(!company) {
-      throw new Error ('This company not found')
+    try {
+      return await this.prisma.company.findUniqueOrThrow( {where:{id}, include: {products: true}} );
+    } catch (error) {
+      throw new NotFoundException();
     }
-
-    return company;
-  }
+  };
 
   async update(id: number, updateCompanyDto: UpdateCompanyDto) {
-    const company = await this.prisma.company.findUnique({ where: {id} });
-    
-    if(!company) {
-      throw new Error ('this company not found')
+    try {
+      return await this.prisma.company.update({
+        where: { id },
+        data: { ...updateCompanyDto }
+      });
+    } catch (error) {
+      throw new NotFoundException();
     }
-
-    const data = {
-      ...updateCompanyDto
-    }
-
-    await this.prisma.company.update({where: {id}, data: {name: data.name, cnpj: data.cnpj}});
-
-    return {messege: 'company update successfully'};
-  }
+  };
 
   async remove(id: number) {
-    const company = await this.prisma.company.findUnique({where: {id}});
-    
-    if(!company) {
-      throw new Error ('this company not found')
+    try {
+      await this.prisma.company.delete({ where: { id } });
+    } catch (error) {
+      throw new NotFoundException();
     }
-
-    await this.prisma.company.delete({where: {id}});
-
-    return {messege: 'company delete successfully'}
-  }
+  };
 }

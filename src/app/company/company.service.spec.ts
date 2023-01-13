@@ -22,7 +22,7 @@ const fakeCompany = [
 
 const primsMock = {
   company: {
-    create: jest.fn(),
+    create: jest.fn().mockReturnValue(fakeCompany[0]),
     findMany: jest.fn(),
     findUniqueOrThrow: jest.fn(),
     update: jest.fn(),
