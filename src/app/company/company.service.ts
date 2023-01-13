@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/database/prisma.service';
+import { PrismaService } from '../../database/prisma.service';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
 
@@ -34,7 +34,7 @@ export class CompanyService {
   }
 
   async findOne(id: number) {
-    const company = await this.prisma.company.findUnique({where: {id}, include: {products: true} });
+    const company = await this.prisma.company.findUniqueOrThrow({where: {id}, include: {products: true} });
 
     if(!company) {
       throw new Error ('This company not found')
