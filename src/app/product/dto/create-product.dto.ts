@@ -15,7 +15,7 @@ export class CreateProductDto {
   cod_reference?: string;
 
   @IsNotEmpty()
-  qnts_item: string;
+  qts_item: string;
 
   @IsNotEmpty()
   value_sale: string;
@@ -25,5 +25,6 @@ export class CreateProductDto {
 
   due_date?: string;
     @IsNotEmpty()
-    companyId: number;
+  
+  companyId: number;
 }

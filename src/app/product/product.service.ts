@@ -17,7 +17,7 @@ export class ProductService {
         name: data.name,
         cod_reference: hasCode,
         trader_comme: data.trader_comme,
-        qts_item: data.qnts_item,
+        qts_item: data.qts_item,
         value_sale: data.value_sale,
         data_fabrication: data.data_fabrication,
         due_date: data.due_date,
@@ -65,7 +65,7 @@ export class ProductService {
       data: {
         name: data.name,
         trader_comme: data.trader_comme,
-        qts_item: data.qnts_item,
+        qts_item: data.qts_item,
         value_sale: data.value_sale,
         data_fabrication: data.data_fabrication,
         due_date: data.due_date,
